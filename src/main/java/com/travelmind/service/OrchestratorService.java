@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import com.travelmind.agent.FlightAgent;
 import com.travelmind.agent.HotelAgent;
 import com.travelmind.agent.PolicyAgent;
+import com.travelmind.dto.FlightResponse;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import reactor.core.publisher.Flux;
 
 /**
  * The orchestrator. Delegates to the flight/hotel/policy specialist agents
@@ -69,6 +71,24 @@ public class OrchestratorService {
         log.info("chat completed [conversationId={}] in {} ms", conversationId, System.currentTimeMillis() - start);
         return response;
     }
+
+	public FlightResponse summarize(String message, String conversationId) {
+		long start = System.currentTimeMillis();
+		log.info("chat request [conversationId={}]: {}", conversationId, message);
+
+	     FlightResponse response = chatClient.prompt()
+                  .user(message)
+                  .tools(flightAgent, hotelAgent, policyAgent)
+                  .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
+                  .call().entity(FlightResponse.class);
+
+			log.info("chat completed [conversationId={}] in {} ms", conversationId, System.currentTimeMillis() - start);
+			return response;
+    }
+	
+	public Flux<String> streamChat(String message, String conversationId){
+		return chatClient.prompt().user(message).stream().content();
+	}
 
     public String chatFallback(String message, String conversationId, Throwable t) {
         log.error("chat fallback triggered [conversationId={}] - cause: {}", conversationId, t.toString(), t);
