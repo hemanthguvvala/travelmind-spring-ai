@@ -1,0 +1,38 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Eclipse / STS
+.settings/
+.project
+.classpath
+.factorypath
+.apt_generated/
+.springBeans
+.sts4-cache/
+
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+
+# Build / logs
+*.log
+*.class
+/build/
+/out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / local config — NEVER commit credentials
+*.env
+application-local.properties
+# (AWS credentials live in ~/.aws/credentials, outside the repo — keep it that way)

@@ -1,0 +1,16 @@
+### Phase 1 — chat with Nova Micro
+# (VS Code "REST Client" extension or IntelliJ: click "Send Request" above the line)
+POST http://localhost:8080/chat
+Content-Type: application/json
+
+{
+  "message": "hello from travelmind"
+}
+
+### Try another message
+POST http://localhost:8080/chat
+Content-Type: application/json
+
+{
+  "message": "Give me one travel tip for flying through London Heathrow."
+}
